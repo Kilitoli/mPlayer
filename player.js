@@ -1,0 +1,75 @@
+		var app=new Vue({
+				el:"#player",
+				data:{
+					query:"",
+					//歌单
+					muicList:[],
+					//歌曲地址
+					muicUrl:"",
+					//歌曲名字
+					muicName:"",
+					//歌曲图片
+					muicPic:"",
+					//歌曲评论
+					hotComments:[],
+					//遮罩层
+					isPlay:false,
+					isShow:false,
+					//mv地址
+					mvUrl:""
+				},
+				mounted:function(){
+				      this.hot();//需要触发的函数
+				    },
+				methods:{
+					serch:function(){
+						var that=this;
+						axios.get("https:autumnfish.cn/search?keywords="+this.query).then(function(response){
+							that.muicList=response.data.result.songs;
+							}).catch(function(err){})
+							axios.get("https:autumnfish.cn/search?keywords="+this.query).then(function(response){
+								that.muicList=response.data.result.songs;
+								}).catch(function(err){})
+					},
+					hot(){
+						var that=this;
+						axios.get("https:autumnfish.cn/search?keywords=热门").then(function(response){
+							that.muicList=response.data.result.songs;
+							}).catch(function(err){}),
+							this.muicPic="https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=4103888617,3742418678&fm=26&gp=0.jpg";
+							
+					},
+					playmusic:function(musicId){
+						auto3()
+						var that=this;
+						axios.get("https:autumnfish.cn/song/url?id="+musicId).then(function(response){
+							that.muicUrl=response.data.data[0].url;
+							}).catch(function(err){}),
+							axios.get("https:autumnfish.cn/song/detail?ids="+musicId).then(function(response){
+								that.muicName=response.data.songs[0].name;
+								}).catch(function(err){}),
+								axios.get("https:autumnfish.cn/song/detail?ids="+musicId).then(function(response){
+									that.muicPic=response.data.songs[0].al.picUrl;
+									}).catch(function(err){}),
+									axios.get("https:autumnfish.cn//comment/hot?type=0&id="+musicId).then(function(response){
+										that.hotComments=response.data.hotComments;	
+										console.log(response.data.hotComments)
+										}).catch(function(err){})
+					},
+					playmv:function(mvId){
+						var that=this;
+						axios.get("https:autumnfish.cn/mv/url?id="+mvId).then(function(response){
+							that.mvUrl=response.data.data.url
+							that.isShow=true;
+							}).catch(function(err){})
+					},
+					hide:function(){
+						this.isShow=false;
+						this.mvUrl=";"
+					},
+					created(){
+					           //自动加载indexs方法
+					           this.hot();
+					       }
+				}
+			})

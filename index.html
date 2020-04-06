@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" href="main.css">
+
+		<title>music player</title>
+	</head>
+	<body>
+		<div id="player">
+			<!--歌单-->
+			<h3 id="hot_music">热门歌曲</h3>
+			<div class="nui-scroll">
+				<ul>
+					<li v-for="item in muicList">
+						<a href="#" @click="playmusic(item.id)"><img class="player" src="img/music.png">{{item.name}}</a><img class="player" v-if="item.mvid!=0" @click="playmv(item.mvid)" src="img/mv.png"></li>
+					<span><i></i></span>
+				</ul>
+				<ul class="mv">
+					<li v-for="item in muicList" ><div class="player"></div></li>
+				</ul>
+			</div>
+			<!--搜索框-->
+			<input @keyup.enter="serch" v-model="query" autofocus="autofocus" autocomplete="off" placeholder="请输入歌曲/歌手" class="seach">
+			<!--播放器-->
+			<div class="container">
+				<audio id="music" :src="muicUrl" autoplay loop></audio>
+				<div class="music-info">
+					<div class="music-title">
+						{{ muicName }}
+					</div>
+					<div class="music-progress">
+						<div class="music-played">
+						</div>
+					</div>
+				</div>
+				<div class="music-img rotation suspended" :style="{backgroundImage:'url('+muicPic+')'}">
+					<div class="hover-img">
+					</div>
+				</div>
+				<div class="music-button" id="prev">
+				</div>
+				<div class="music-button play" id="play">
+				</div>
+				<div class="music-button " id="next">
+				</div>
+			</div>
+			<!--评论-->
+			<div id="comment">
+				<h3 id="hot_comment">热门评论</h3>
+				<div class="nui-scroll" style="width: 500px;">
+					<div id="comment_list">
+						<dl v-for="item in hotComments">
+							<dt><img :src="item.user.avatarUrl"></dt>
+							<dd class="name">{{ item.user.nickname }}</dd>
+							<dd class="detail">{{ item.content }}</dd>
+							<hr />
+						</dl>
+					</div>
+				</div>
+			</div>
+			<!--背景图-->
+			<div class="video" v-show="isShow" @click="hide" style="display: none;z-index:4 ;width:100%;height:100%;background:rgba(0,0,0,0.8)">
+				<video :src="mvUrl" controls="controls" autoplay="autoplay"></video>
+				</div>
+				<div id="bg-artwork" :style="{backgroundImage:'url('+muicPic+')'}"></div>
+			</div>
+
+		<script src="vue.js" charset="utf-8"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="player.js" charset="utf-8"></script>
+		<script src="main.js" charset="utf-8"></script>
+	</body>
+</html>
